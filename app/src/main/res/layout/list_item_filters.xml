@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <cn.refactor.library.SmoothCheckBox xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/list_item_filter_checkBox"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        app:color_checked="#000000"
+        app:color_unchecked="#FFFFFF"
+        app:color_unchecked_stroke="@android:color/black"
+        app:duration="100" />
+
+    <TextView
+        android:id="@+id/list_item_filter_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Java"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+
+</LinearLayout>

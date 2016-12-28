@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.example.piyush0.questionoftheday.fragments.MyProfileFragment">
+
+
+
+    <ImageView
+        android:src="@mipmap/ic_launcher"
+        android:id="@+id/activity_profile_picture"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:id="@+id/activity_profile_username"
+        android:text="piyush0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:id="@+id/activity_profile_name"
+        android:text="Piyush Ajmani"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:id="@+id/activity_profile_email"
+        android:text="piyushajmani@codingblocks.com"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+
+            android:text="Rating: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:text="50"
+            android:id="@+id/activity_profile_rating"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+
+    <com.iarcuschin.simpleratingbar.SimpleRatingBar
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:id="@+id/activity_profile_rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+
+</LinearLayout>

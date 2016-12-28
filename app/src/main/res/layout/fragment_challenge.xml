@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.piyush0.questionoftheday.fragments.ChallengeFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Make a Quiz!"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.piotrek.customspinner.CustomSpinner
+                android:id="@+id/challenge_fragment_topic_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></com.piotrek.customspinner.CustomSpinner>
+
+            <com.piotrek.customspinner.CustomSpinner
+                android:id="@+id/challenge_fragment_noOfQues_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></com.piotrek.customspinner.CustomSpinner>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/challenge_fragment_opponent_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_shape"
+
+        android:text="Choose Opponents"
+        android:textAppearance="@style/Widget.AppCompat.Button.Colored"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+</LinearLayout>

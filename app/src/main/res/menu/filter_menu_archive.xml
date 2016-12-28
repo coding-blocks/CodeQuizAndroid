@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="Filter"
+        android:id="@+id/action_filter"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_sort_white_24dp"></item>
+    <item android:title="Refresh"
+        android:id="@+id/action_refersh"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_cached_white_24dp"></item>
+</menu>

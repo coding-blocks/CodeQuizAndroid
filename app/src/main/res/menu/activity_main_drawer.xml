@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/main_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_today"
+            android:icon="@drawable/ic_today_black_24dp"
+            android:title="Today's Question" />
+
+        <item
+            android:id="@+id/nav_challenge"
+            android:icon="@drawable/ic_group_black_24dp"
+            android:title="Challenge friends" />
+
+        <item
+            android:id="@+id/nav_archive"
+            android:icon="@drawable/ic_library_books_black_24dp"
+            android:title="Archive" />
+
+
+    </group>
+
+    <group
+        android:id="@+id/my_group"
+
+        android:checkableBehavior="single">
+
+
+        <item
+            android:id="@+id/nav_my_challenges"
+            android:icon="@drawable/ic_assessment_black_24dp"
+            android:title="My Challenges" />
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="My Profile" />
+
+
+    </group>
+
+</menu>

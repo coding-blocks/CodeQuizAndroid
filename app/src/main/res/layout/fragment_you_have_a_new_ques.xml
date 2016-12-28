@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_today_youHaveANewQues_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.piyush0.questionoftheday.fragments.SolveTodayQuestionFragment">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="You have a new question!"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+
+    <Button
+        android:id="@+id/fragment_today_btn_letsSolve"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="Lets Solve"
+        android:textAppearance="@style/Widget.AppCompat.Button.Colored"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:background="@drawable/button_shape" />
+
+</LinearLayout>
