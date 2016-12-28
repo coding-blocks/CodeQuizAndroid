@@ -5,14 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <TextView
-
+    <com.mittsu.markedview.MarkedView
         android:id="@+id/fragment_question_tv_statement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="What is x?"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" ></com.mittsu.markedview.MarkedView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_question_options_list"

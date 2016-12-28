@@ -21,6 +21,7 @@ import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.CheckAnswer;
 import com.example.piyush0.questionoftheday.utils.InitOptionsSelectedArray;
 import com.example.piyush0.questionoftheday.utils.SimpleDividerItemDecoration;
+import com.mittsu.markedview.MarkedView;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class SolveQuestionFragment extends Fragment {
 
     public static final String TAG = "Solve";
 
-    private TextView tv_quesStatement;
+    private MarkedView tv_quesStatement;
     private RecyclerView optionsRecyclerView;
     private Button btn_sumbit;
 
@@ -119,7 +120,7 @@ public class SolveQuestionFragment extends Fragment {
 
     private void initViews(View view) {
 
-        tv_quesStatement = (TextView) view.findViewById(R.id.fragment_question_tv_statement);
+        tv_quesStatement = (MarkedView) view.findViewById(R.id.fragment_question_tv_statement);
         btn_sumbit = (Button) view.findViewById(R.id.fragment_question_btn_submit);
         if (isButtonActivated) {
             btn_sumbit.setVisibility(View.VISIBLE);
@@ -146,7 +147,7 @@ public class SolveQuestionFragment extends Fragment {
             question = DummyQuestion.getDummyQuestions().get(questionId);
         }
 
-        tv_quesStatement.setText(question.getQuestion());
+        tv_quesStatement.setMDText(question.getQuestion());
     }
 
     public class OptionViewHolder extends RecyclerView.ViewHolder {
