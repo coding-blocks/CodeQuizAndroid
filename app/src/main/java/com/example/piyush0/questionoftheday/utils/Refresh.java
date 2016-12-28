@@ -31,23 +31,23 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
  */
 
 public class Refresh {
-
+    public static final String TAG = "refresh";
 
     public static void refresh(SharedPreferences sharedPreferences, FragmentManager fragmentManager, Context context) {
-
-
+        Realm realm = Realm.getDefaultInstance();
+        Log.d(TAG, "refresh: " + realm.where(Question.class).findAll());
         boolean isDownloaded = sharedPreferences.getBoolean("isDownloaded", false);
         if (isDownloaded) {
-
-
+            Log.d(TAG, "refresh: isDownloaded true");
             boolean isOpened = sharedPreferences.getBoolean("isOpened", false);
 
             if (isOpened) {
-
+                Log.d(TAG, "refresh: is Opened true" );
                 int attempts = sharedPreferences.getInt("attempts", 0);
                 boolean isCorrect = sharedPreferences.getBoolean("isCorrect", false);
 
                 if (isCorrect) {
+                    Log.d(TAG, "refresh: is Correct true" );
                     fragmentManager.beginTransaction()
                             .replace(R.id.content_main,
                                     TipFragment.newInstance()).commit();
@@ -63,12 +63,14 @@ public class Refresh {
                     }
                 }
             } else {
+                Log.d(TAG, "refresh: isOpened false");
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_main,
                                 YouHaveANewQuesFragment.newInstance()).commit();
             }
 
         } else {
+            Log.d(TAG, "refresh: is Download false" );
             if (youHaveInternet(context)) {
                 clearSharedPref(sharedPreferences);
                 downloadAndSaveToDb(context);
@@ -132,12 +134,12 @@ public class Refresh {
 
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Question> yesterdayQuestions = realm.where(Question.class).equalTo("isToday", true).findAll();
-
+        realm.beginTransaction();
         for (Question q : yesterdayQuestions) {
             q.setToday(false);
         }
 
-        realm.beginTransaction();
+
         question.setToday(true);
         realm.copyToRealm(question);
         realm.commitTransaction();
@@ -151,6 +153,7 @@ public class Refresh {
         editor.putBoolean("isOpened", false);
         editor.putInt("attempts", 0);
         editor.putBoolean("isCorrect", false);
+        editor.putBoolean("tipDownloaded", false);
         editor.commit();
     }
 

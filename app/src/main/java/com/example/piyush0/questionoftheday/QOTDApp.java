@@ -29,7 +29,7 @@ public class QOTDApp extends Application {
         if (!prefs.getBoolean("firstTime", false)) {
 
             DemoSyncJob demoSyncJob = new DemoSyncJob();
-            demoSyncJob.schedulePeriodicJob(getApplicationContext());
+            demoSyncJob.schedulePeriodicJob();
 
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("firstTime", true);

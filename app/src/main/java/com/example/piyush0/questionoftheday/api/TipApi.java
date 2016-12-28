@@ -1,5 +1,7 @@
 package com.example.piyush0.questionoftheday.api;
 
+import com.example.piyush0.questionoftheday.models.Tip;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 
@@ -9,5 +11,5 @@ import retrofit2.http.GET;
 
 public interface TipApi {
     @GET("todayTip")
-    Call<String> getTodaysTip();
+    Call<Tip> getTodaysTip();
 }

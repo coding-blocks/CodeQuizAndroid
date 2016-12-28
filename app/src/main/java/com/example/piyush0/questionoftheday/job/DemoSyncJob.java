@@ -2,6 +2,7 @@ package com.example.piyush0.questionoftheday.job;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
@@ -17,27 +18,25 @@ import java.util.concurrent.TimeUnit;
 public class DemoSyncJob extends Job {
 
     public static final String TAG = "job_demo_tag";
-    private Context context;
 
     @Override
     @NonNull
     protected Result onRunJob(Params params) {
 
-        Refresh.job(context.getSharedPreferences(MainActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE), context);
-
+        Refresh.job(getContext().getSharedPreferences(MainActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE), getContext());
+        Log.d(TAG, "onRunJob: " + "job ran");
         return Result.SUCCESS;
     }
 
-    public int schedulePeriodicJob(Context context) {
+    public int schedulePeriodicJob() {
 
-        this.context = context;
 
         int jobId = new JobRequest.Builder(DemoSyncJob.TAG)
-                .setPeriodic(TimeUnit.MINUTES.toMillis(60), TimeUnit.MINUTES.toMillis(5))
+                .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
                 .setPersisted(true)
                 .build()
                 .schedule();
-
+        //TODO: Change the time to 60 minutes
 
         return jobId;
 
