@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,14 +21,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <com.mittsu.markedview.MarkedView
                 android:id="@+id/item_list_archive_question_statement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="What do you mean by static method?"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"></com.mittsu.markedview.MarkedView>
 
+
+            <Button
+                android:id="@+id/list_item_question_archive_btn_attempt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button_shape"
+                android:text="Attempt"
+                android:textAppearance="@style/Widget.AppCompat.Button.Colored"
+                android:textColor="#000000"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <View

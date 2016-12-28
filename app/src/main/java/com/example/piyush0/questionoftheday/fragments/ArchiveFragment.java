@@ -14,13 +14,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
 import com.example.piyush0.questionoftheday.api.QuestionApi;
 import com.example.piyush0.questionoftheday.models.Question;
+import com.mittsu.markedview.MarkedView;
 
 import java.util.ArrayList;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -151,35 +154,38 @@ public class ArchiveFragment extends Fragment {
 
     private class ArchiveViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_question_statement;
+        MarkedView tv_question_statement;
         CardView cardView;
+        Button btn_attempt;
 
         ArchiveViewHolder(View itemView) {
             super(itemView);
         }
     }
 
-    private class ArchiveAdapter extends RecyclerView.Adapter<ArchiveViewHolder> {
+    private class ArchiveAdapter extends RecyclerView.Adapter<ArchiveViewHolder> implements View.OnClickListener {
 
         public ArchiveViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = li.inflate(R.layout.list_item_questions_archive, parent, false);
 
             ArchiveViewHolder archiveViewHolder = new ArchiveViewHolder(view);
-            archiveViewHolder.tv_question_statement = (TextView) view.findViewById(R.id.item_list_archive_question_statement);
+            archiveViewHolder.tv_question_statement = (MarkedView) view.findViewById(R.id.item_list_archive_question_statement);
             archiveViewHolder.cardView = (CardView) view.findViewById(R.id.item_list_archive_card);
-
+            archiveViewHolder.btn_attempt = (Button) view.findViewById(R.id.list_item_question_archive_btn_attempt);
             return archiveViewHolder;
         }
 
         public void onBindViewHolder(final ArchiveViewHolder holder, final int position) {
 
+            Log.d(TAG, "onBindViewHolder: " + questions.get(position).getQuestion());
+            holder.tv_question_statement.setMDText(questions.get(position).getQuestion());
 
-            holder.tv_question_statement.setText(questions.get(position).getQuestion());
 
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
+            holder.btn_attempt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d(TAG, "onClick: item");
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.
                             beginTransaction().
@@ -195,6 +201,11 @@ public class ArchiveFragment extends Fragment {
         public int getItemCount() {
 
             return questions.size();
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }

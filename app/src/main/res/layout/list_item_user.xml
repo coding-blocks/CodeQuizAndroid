@@ -36,12 +36,11 @@
 
             <ImageView
                 android:id="@+id/user_list_iv_userimage"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginLeft="10dp"
-
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/ic_account_circle_black_24dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
