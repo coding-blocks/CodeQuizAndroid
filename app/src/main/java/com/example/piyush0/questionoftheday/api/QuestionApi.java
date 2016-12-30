@@ -28,20 +28,10 @@ public interface QuestionApi {
         ArrayList<String> filters;
         String sortBy;
 
-        public ArrayList<String> getFilters() {
-            return filters;
-        }
-
-        public void setFilters(ArrayList<String> filters) {
+        public Request(ArrayList<String> filters, String sortBy) {
             this.filters = filters;
-        }
-
-        public String getSortBy() {
-            return sortBy;
-        }
-
-        public void setSortBy(String sortBy) {
             this.sortBy = sortBy;
         }
+
     }
 }

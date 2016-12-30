@@ -33,9 +33,10 @@ public class ListOfUsersChallengeActivity extends AppCompatActivity {
     private Button btn_challenge;
 
     private ArrayList<User> users;
+
     private String selectedTopic;
     private Integer numOfQuestionsSelected;
-    private ArrayList<String> usersChallenged;
+    private ArrayList<Integer> usersChallenged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,7 @@ public class ListOfUsersChallengeActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final UserViewHolder holder, int position) {
 
-            User user = users.get(position);
+            final User user = users.get(position);
 
             holder.tv_name.setText(user.getName());
             holder.tv_score.setText(String.valueOf(user.getScore()));
@@ -156,9 +157,9 @@ public class ListOfUsersChallengeActivity extends AppCompatActivity {
                     holder.checkBox.setChecked(!holder.checkBox.isChecked(), true);
 
                     if (holder.checkBox.isChecked()) {
-                        usersChallenged.add(holder.tv_name.getText().toString());
+                        usersChallenged.add(user.getUnique_id());
                     } else {
-                        usersChallenged.remove(holder.tv_name.getText().toString());
+                        usersChallenged.remove(user.getUnique_id());
                     }
 
                     btn_challenge.setEnabled(usersChallenged.size() > 0);

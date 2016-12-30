@@ -35,7 +35,7 @@ public class DummyChallenges {
         scores.add(99.4);
 
 
-        Challenge challenge1 = new Challenge(DummyUsers.getUsers(), scores, statuses, new Date(2016, 2, 3), "C++", 0);
+        Challenge challenge1 = new Challenge(DummyUsers.getUsers(), scores, statuses, new Date(2016, 2, 3), "C++", 0, DummyQuestion.getDummyQuestions());
 
 
         User user1 = new User("A", 23, "fns");

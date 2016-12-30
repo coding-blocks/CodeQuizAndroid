@@ -127,9 +127,8 @@ public class ArchiveFragment extends Fragment {
         String url = getResources().getString(R.string.localhost_url) + "questions/";
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
         QuestionApi questionApi = retrofit.create(QuestionApi.class);
-        QuestionApi.Request request = new QuestionApi.Request();
-        request.setSortBy(selectedSort);
-        request.setFilters(filter);
+        QuestionApi.Request request = new QuestionApi.Request(filter,selectedSort);
+
         questionApi.listQuestionWithFilter(request).enqueue(new Callback<ArrayList<Question>>() {
             @Override
             public void onResponse(Call<ArrayList<Question>> call, Response<ArrayList<Question>> response) {
@@ -144,6 +143,7 @@ public class ArchiveFragment extends Fragment {
 
         archiveAdapter.notifyDataSetChanged();
     }
+
 
     private void initRecyclerView(View view) {
         questionsRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_archive_list_questions);
@@ -189,7 +189,8 @@ public class ArchiveFragment extends Fragment {
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.
                             beginTransaction().
-                            replace(R.id.content_main, SolveQuestionFragment.newInstance(questions.get(holder.getAdapterPosition()).getId()
+                            replace(R.id.content_main,
+                                    SolveQuestionFragment.newInstance(questions.get(holder.getAdapterPosition()).getId(),null
                                     , true,
                                     "ArchiveFragment")).
                             commit();

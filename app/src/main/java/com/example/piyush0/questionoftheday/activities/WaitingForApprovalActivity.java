@@ -10,9 +10,18 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.piyush0.questionoftheday.R;
+import com.example.piyush0.questionoftheday.api.ChallengeApi;
+import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.FontsOverride;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WaitingForApprovalActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,8 +31,9 @@ public class WaitingForApprovalActivity extends AppCompatActivity implements Vie
 
     private String selectedTopic;
     private Integer numOfQuestionsSelected;
-    private ArrayList<String> usersChallenged;
+    private ArrayList<Integer> usersChallenged;
 
+    private ArrayList<String> questionArrayJson;
 
     public static final String TAG = "WaitingForAppAct";
 
@@ -35,18 +45,67 @@ public class WaitingForApprovalActivity extends AppCompatActivity implements Vie
 
         FontsOverride.applyFontForToolbarTitle(this, FontsOverride.FONT_PROXIMA_NOVA,getWindow());
 
-
         initViews();
         getIntentExtras();
-        logUsersChallenged();
-
         btn_lets_go.setOnClickListener(this);
+
+        createChallenge();
     }
 
-    private void onLoadingDone() {
+    private void createChallenge() {
+        String url = getResources().getString(R.string.localhost_url) + "challenge/";
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
+        ChallengeApi challengeApi = retrofit.create(ChallengeApi.class);
+        ChallengeApi.ChallengeCreator challengeCreator = new ChallengeApi.ChallengeCreator(usersChallenged,numOfQuestionsSelected,selectedTopic);
+
+        challengeApi.getChallengeId(challengeCreator).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                Integer cId = response.body();
+                getQuestions(cId);
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void getQuestions(Integer id) {
+        String url = getResources().getString(R.string.localhost_url) + "challenge/";
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
+        ChallengeApi challengeApi = retrofit.create(ChallengeApi.class);
+
+        challengeApi.getQuestions(id).enqueue(new Callback<ArrayList<Question>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Question>> call, Response<ArrayList<Question>> response) {
+                ArrayList<Question> questions = response.body();
+                questionArrayJson = getStringsFromQuestions(questions);
+                loadingDone();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Question>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private ArrayList<String> getStringsFromQuestions(ArrayList<Question> questions){
+        ArrayList<String> retVal = new ArrayList<>();
+        Gson gson = new Gson();
+        for(int i =0; i<questions.size() ; i++) {
+            retVal.add(gson.toJson(questions.get(i)));
+        }
+
+        return retVal;
+    }
+
+    private void loadingDone() {
         btn_temp.setVisibility(View.GONE);
-        layout_loading_done.setVisibility(View.VISIBLE);
         layout_loading.setVisibility(View.GONE);
+        layout_loading_done.setVisibility(View.VISIBLE);
         btn_lets_go.setVisibility(View.VISIBLE);
     }
 
@@ -61,23 +120,16 @@ public class WaitingForApprovalActivity extends AppCompatActivity implements Vie
         btn_temp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLoadingDone();
+                loadingDone();
             }
         });
-    }
-
-    private void logUsersChallenged() {
-
-        for (int i = 0; i < usersChallenged.size(); i++) {
-            Log.d(TAG, "onCreate: " + usersChallenged.get(i));
-        }
     }
 
     private void getIntentExtras() {
         Intent intent = getIntent();
         selectedTopic = intent.getStringExtra("selectedTopic");
         numOfQuestionsSelected = intent.getIntExtra("numOfQuestionsSelected", 0);
-        usersChallenged = intent.getStringArrayListExtra("usersChallenged");
+        usersChallenged = intent.getIntegerArrayListExtra("usersChallenged");
     }
 
     @Override
@@ -91,6 +143,7 @@ public class WaitingForApprovalActivity extends AppCompatActivity implements Vie
         intent.putExtra("selectedTopic", selectedTopic);
         intent.putExtra("numOfQuestionsSelected", numOfQuestionsSelected);
         intent.putExtra("usersChallenged", usersChallenged);
+        intent.putExtra("questionArrayJson", questionArrayJson);
         startActivity(intent);
         finish();
     }

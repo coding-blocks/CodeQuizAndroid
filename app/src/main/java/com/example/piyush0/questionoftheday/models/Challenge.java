@@ -14,14 +14,25 @@ public class Challenge {
     private Date date;
     private String topic;
     private Integer challenge_Id;
+    private ArrayList<Question> questions;
 
-    public Challenge(ArrayList<User> usersInGame, ArrayList<Double> score, ArrayList<Boolean> pendingList, Date date, String topic, Integer challenge_Id) {
+    public Challenge(ArrayList<User> usersInGame,
+                     ArrayList<Double> score, ArrayList<Boolean> pendingList, Date date, String topic, Integer challenge_Id, ArrayList<Question> questions) {
         this.usersInGame = usersInGame;
         this.score = score;
         this.statuses = pendingList;
         this.date = date;
         this.topic = topic;
         this.challenge_Id = challenge_Id;
+        this.questions = questions;
+    }
+
+    public ArrayList<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(ArrayList<Question> questions) {
+        this.questions = questions;
     }
 
     public ArrayList<Double> getScore() {
@@ -46,35 +57,6 @@ public class Challenge {
 
     public void setChallenge_Id(Integer challenge_Id) {
         this.challenge_Id = challenge_Id;
-    }
-
-    public String usersChallenged() {
-        String rv = "";
-
-        if (usersInGame.size() > 3) {
-
-            for (int i = 0; i < 2; i++) {
-                rv += usersInGame.get(i).getName() + ", ";
-            }
-
-            rv += usersInGame.get(2).getName() + " and " + (usersInGame.size() - 3) + " others.";
-            return rv;
-
-        } else {
-            for (int i = 0; i < usersInGame.size() - 1; i++) {
-                rv += usersInGame.get(i).getName() + ", ";
-            }
-
-            rv += usersInGame.get(usersInGame.size() - 1).getName() + ".";
-            return rv;
-        }
-    }
-
-    @Override
-    public String toString() {
-        String rv = topic + " Quiz";
-
-        return rv;
     }
 
     public Date getDate() {

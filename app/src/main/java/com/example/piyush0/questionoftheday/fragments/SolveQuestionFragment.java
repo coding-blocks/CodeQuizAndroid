@@ -4,6 +4,7 @@ package com.example.piyush0.questionoftheday.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.CheckAnswer;
 import com.example.piyush0.questionoftheday.utils.InitOptionsSelectedArray;
 import com.example.piyush0.questionoftheday.utils.SimpleDividerItemDecoration;
+import com.google.gson.Gson;
 import com.mittsu.markedview.MarkedView;
 
 import java.util.ArrayList;
@@ -56,16 +58,28 @@ public class SolveQuestionFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SolveQuestionFragment newInstance(Integer questionId, Boolean isButtonActivated, String source) {
+
+    public static SolveQuestionFragment newInstance(@Nullable Integer questionId, @Nullable Question question, Boolean isButtonActivated, String source) {
         Bundle args = new Bundle();
-        args.putInt("questionId", questionId);
+        if (questionId != null) {
+            args.putInt("questionId", questionId);
+        }
         args.putBoolean("isButtonActivated", isButtonActivated);
+
+        args.putString("questionJson", getJSon(question));
 
         args.putString("source", source);
         SolveQuestionFragment solveQuestionFragment = new SolveQuestionFragment();
         solveQuestionFragment.setArguments(args);
         return solveQuestionFragment;
     }
+
+    private static String getJSon(Question question) {
+        Gson gson = new Gson();
+
+        return gson.toJson(question);
+    }
+
 
     private void setClickListenerOnButton() {
 
@@ -143,11 +157,20 @@ public class SolveQuestionFragment extends Fragment {
             question = realm.where(Question.class).equalTo("isToday", true).findFirst();
 
         } else {
-            int questionId = getArguments().getInt("questionId");
-            question = DummyQuestion.getDummyQuestions().get(questionId);
+            Integer questionId = getArguments().getInt("questionId", Integer.MIN_VALUE);
+
+            if(questionId == Integer.MIN_VALUE){
+                question = getQuestionFromJson(getArguments().getString("questionJson"));
+            }
         }
 
         tv_quesStatement.setMDText(question.getQuestion());
+    }
+
+    private Question getQuestionFromJson(String json) {
+        Gson gson = new Gson();
+        Question question = gson.fromJson(json, Question.class);
+        return question;
     }
 
     public class OptionViewHolder extends RecyclerView.ViewHolder {

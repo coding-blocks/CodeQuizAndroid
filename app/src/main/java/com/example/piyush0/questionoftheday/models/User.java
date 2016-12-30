@@ -16,6 +16,18 @@ public class User {
     private Integer score;
     private Integer unique_id;
 
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public Integer getUnique_id() {
+        return unique_id;
+    }
+
+    public void setUnique_id(Integer unique_id) {
+        this.unique_id = unique_id;
+    }
+
     public User(String name, Integer score, String email) {
 
         this.name = name;

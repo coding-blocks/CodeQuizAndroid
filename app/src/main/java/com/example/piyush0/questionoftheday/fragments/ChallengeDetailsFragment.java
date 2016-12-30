@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
+import com.example.piyush0.questionoftheday.api.ChallengeApi;
 import com.example.piyush0.questionoftheday.dummy_utils.DummyChallenges;
 import com.example.piyush0.questionoftheday.models.Challenge;
 import com.example.piyush0.questionoftheday.models.User;
@@ -25,6 +26,11 @@ import de.codecrafters.tableview.model.TableColumnModel;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +40,7 @@ public class ChallengeDetailsFragment extends Fragment {
     private Challenge challenge;
 
     private TableView tableView;
+    private View view;
 
     public ChallengeDetailsFragment() {
     }
@@ -51,9 +58,10 @@ public class ChallengeDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_challenge_details, container, false);
+
+        view = inflater.inflate(R.layout.fragment_challenge_details, container, false);
         fetchChallenge();
-        initViews(view);
+
         return view;
     }
 
@@ -85,8 +93,24 @@ public class ChallengeDetailsFragment extends Fragment {
 
     private void fetchChallenge() {
         int challengeId = getArguments().getInt("challengeId", 0);
-        challenge = DummyChallenges.getDummyChallenges().get(0);
-        //TODO: fetch on the basis of challenge id.
+
+        String url = getResources().getString(R.string.localhost_url) + "challenge/";
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
+        ChallengeApi challengeApi = retrofit.create(ChallengeApi.class);
+
+        challengeApi.getChallenge(challengeId).enqueue(new Callback<Challenge>() {
+            @Override
+            public void onResponse(Call<Challenge> call, Response<Challenge> response) {
+                challenge = response.body();
+                initViews(view);
+
+            }
+
+            @Override
+            public void onFailure(Call<Challenge> call, Throwable t) {
+
+            }
+        });
     }
 
     private class HeaderAdapter extends TableHeaderAdapter {

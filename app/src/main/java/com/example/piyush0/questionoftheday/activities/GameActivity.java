@@ -12,13 +12,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
-import com.example.piyush0.questionoftheday.fragments.SolveQuestionFragment;
+import com.example.piyush0.questionoftheday.dummy_utils.DummyChallenges;
 import com.example.piyush0.questionoftheday.dummy_utils.DummyQuestion;
+import com.example.piyush0.questionoftheday.fragments.SolveQuestionFragment;
+import com.example.piyush0.questionoftheday.models.Challenge;
 import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.CheckAnswer;
 import com.example.piyush0.questionoftheday.utils.FontsOverride;
 import com.example.piyush0.questionoftheday.utils.InitOptionsSelectedArray;
 import com.example.piyush0.questionoftheday.utils.TimeUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
 
@@ -29,8 +33,8 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
     private String selectedTopic;
     private Integer numOfQuestionsSelected;
     private ArrayList<String> usersChallenged;
-
     private ArrayList<Question> questions;
+
     private TextView tv_clock_minutes, tv_clock_seconds;
     private Button btn_next;
 
@@ -56,7 +60,6 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
 
         FontsOverride.applyFontForToolbarTitle(this, FontsOverride.FONT_PROXIMA_NOVA,getWindow());
 
-
         optionsSelected = InitOptionsSelectedArray.init(optionsSelected);
 
         optionsYouSelected = new ArrayList<>();
@@ -76,7 +79,7 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
         //TODO: Load the correct question using IDs.
         getSupportFragmentManager().
                 beginTransaction().
-                replace(R.id.activity_game_frag_container, SolveQuestionFragment.newInstance(0, false, "GameActivity")).
+                replace(R.id.activity_game_frag_container, SolveQuestionFragment.newInstance(null,questions.get(0), false, "GameActivity")).
                 commit();
 
 
@@ -88,9 +91,23 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
 
     }
 
+
     private void getQuestions() {
-        questions = DummyQuestion.getDummyQuestions();
-        //TODO: Get Questions based on number of questions and topic.
+        ArrayList<String> quesArrJson = getIntent().getStringArrayListExtra("questionArrayJson");
+        questions = getQuestionsFromStrings(quesArrJson);
+
+    }
+
+    private ArrayList<Question> getQuestionsFromStrings(ArrayList<String> strings){
+        ArrayList<Question> retVal = new ArrayList<>();
+
+        Gson gson = new Gson();
+        for(int i = 0; i<strings.size(); i++) {
+            Question question = gson.fromJson(strings.get(i),Question.class);
+            retVal.add(question);
+        }
+
+        return retVal;
     }
 
     private void setListenerOnButton() {
@@ -101,7 +118,6 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
                 ArrayList<Integer> optionsYouSelectedInt = getOptionsYouSelectedInt(optionsSelected, questions.get(counter));
                 optionsYouSelected.add(optionsYouSelectedInt);
                 boolean isCorrectlySolved = CheckAnswer.isCorrect(optionsSelected, questions.get(counter));
-
 
                 correctsAndIncorrects.add(isCorrectlySolved);
 
@@ -175,7 +191,7 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
     private void loadNextQuestion() {
         //TODO: Get next question based on IDs.
         getSupportFragmentManager().
-                beginTransaction().replace(R.id.activity_game_frag_container, SolveQuestionFragment.newInstance(counter, false, "GameActivity")).
+                beginTransaction().replace(R.id.activity_game_frag_container, SolveQuestionFragment.newInstance(null,questions.get(counter), false, "GameActivity")).
                 commit();
     }
 
