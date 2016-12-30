@@ -163,7 +163,7 @@ public class ArchiveFragment extends Fragment {
         }
     }
 
-    private class ArchiveAdapter extends RecyclerView.Adapter<ArchiveViewHolder> implements View.OnClickListener {
+    private class ArchiveAdapter extends RecyclerView.Adapter<ArchiveViewHolder> {
 
         public ArchiveViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -199,13 +199,8 @@ public class ArchiveFragment extends Fragment {
         }
 
         public int getItemCount() {
-
             return questions.size();
         }
 
-        @Override
-        public void onClick(View v) {
-
-        }
     }
 }

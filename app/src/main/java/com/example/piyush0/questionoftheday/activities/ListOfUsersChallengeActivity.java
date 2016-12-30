@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
 import com.example.piyush0.questionoftheday.api.UserApi;
-import com.example.piyush0.questionoftheday.dummy_utils.DummyUsers;
 import com.example.piyush0.questionoftheday.models.User;
 import com.example.piyush0.questionoftheday.utils.FontsOverride;
 

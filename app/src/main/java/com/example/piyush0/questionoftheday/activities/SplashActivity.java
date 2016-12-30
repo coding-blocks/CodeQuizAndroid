@@ -23,8 +23,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        Realm realm = Realm.getDefaultInstance();
-        Log.d(TAG, "onCreate: " + realm.where(Question.class).findAll());
+
         FontsOverride.applyFontForToolbarTitle(this, FontsOverride.FONT_PROXIMA_NOVA,getWindow());
 
         init();

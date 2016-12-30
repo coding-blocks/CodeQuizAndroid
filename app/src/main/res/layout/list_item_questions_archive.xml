@@ -39,8 +39,8 @@
                 android:background="@drawable/button_shape"
                 android:text="Attempt"
                 android:textAppearance="@style/Widget.AppCompat.Button.Colored"
-                android:textColor="#000000"
-                android:textSize="10sp" />
+                android:textColor="#FFFFFF"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <View

@@ -50,7 +50,7 @@
                 android:background="@drawable/button_shape"
                 android:text="Done"
                 android:textAppearance="@style/Widget.AppCompat.Button.Colored"
-                android:textColor="#000000"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
 

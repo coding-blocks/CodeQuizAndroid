@@ -30,7 +30,7 @@
                 android:background="@drawable/button_shape"
                 android:text="Submit"
                 android:textAppearance="@style/Widget.AppCompat.Button.Colored"
-                android:textColor="#000000"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <!--<fragment-->
