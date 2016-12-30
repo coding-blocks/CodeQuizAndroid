@@ -35,6 +35,8 @@ public class WaitingForApprovalActivity extends AppCompatActivity implements Vie
 
     private ArrayList<String> questionArrayJson;
 
+    private Integer challengeId;
+
     public static final String TAG = "WaitingForAppAct";
 
 
@@ -61,8 +63,8 @@ public class WaitingForApprovalActivity extends AppCompatActivity implements Vie
         challengeApi.getChallengeId(challengeCreator).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
-                Integer cId = response.body();
-                getQuestions(cId);
+                challengeId = response.body();
+                getQuestions(challengeId);
             }
 
             @Override
@@ -144,6 +146,7 @@ public class WaitingForApprovalActivity extends AppCompatActivity implements Vie
         intent.putExtra("numOfQuestionsSelected", numOfQuestionsSelected);
         intent.putExtra("usersChallenged", usersChallenged);
         intent.putExtra("questionArrayJson", questionArrayJson);
+        intent.putExtra("challengeId", challengeId);
         startActivity(intent);
         finish();
     }

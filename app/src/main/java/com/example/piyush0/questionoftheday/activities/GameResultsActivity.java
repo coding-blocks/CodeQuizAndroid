@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,10 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
+import com.example.piyush0.questionoftheday.api.ChallengeApi;
+import com.example.piyush0.questionoftheday.api.QuestionApi;
 import com.example.piyush0.questionoftheday.dummy_utils.DummyQuestion;
+import com.example.piyush0.questionoftheday.models.Challenge;
 import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.FontsOverride;
 import com.example.piyush0.questionoftheday.utils.TimeUtil;
@@ -23,6 +27,11 @@ import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.TableHeaderAdapter;
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GameResultsActivity extends AppCompatActivity {
 
@@ -35,16 +44,38 @@ public class GameResultsActivity extends AppCompatActivity {
     private ArrayList<ArrayList<Integer>> optionsSelected;
     private ArrayList<Question> questions;
     private ArrayList<Boolean> correctsAndIncorrects;
+    private Integer numCorrect;
+    private Integer challengeId; //TODO: Get this
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_results);
 
-        FontsOverride.applyFontForToolbarTitle(this, FontsOverride.FONT_PROXIMA_NOVA,getWindow());
+        FontsOverride.applyFontForToolbarTitle(this, FontsOverride.FONT_PROXIMA_NOVA, getWindow());
         getQuestions();
         getIntentExtras();
         initViews();
+        submit();
+    }
+
+    private void submit() {
+        String url = getResources().getString(R.string.localhost_url) + "challenge/";
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
+        ChallengeApi challengeApi = retrofit.create(ChallengeApi.class);
+        ChallengeApi.Submission submission = new ChallengeApi.Submission(numCorrect, timeTaken);
+        
+        challengeApi.submit(submission, challengeId).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getQuestions() {
@@ -57,6 +88,8 @@ public class GameResultsActivity extends AppCompatActivity {
         timeTaken = intent.getLongExtra("timeForGame", zero);
         optionsSelected = (ArrayList<ArrayList<Integer>>) intent.getSerializableExtra("optionsYouSelected");
         correctsAndIncorrects = (ArrayList<Boolean>) intent.getSerializableExtra("correctsAndIncorrects");
+        numCorrect = intent.getIntExtra("numCorrect", 0);
+        challengeId = intent.getIntExtra("challengeId", 0);
     }
 
     private void initViews() {
@@ -150,10 +183,9 @@ public class GameResultsActivity extends AppCompatActivity {
 
                     String isCorrect = "";
 
-                    if(correctsAndIncorrects.get(rowIndex)){
+                    if (correctsAndIncorrects.get(rowIndex)) {
                         isCorrect = "Correct";
-                    }
-                    else{
+                    } else {
                         isCorrect = "Incorrect";
                     }
 

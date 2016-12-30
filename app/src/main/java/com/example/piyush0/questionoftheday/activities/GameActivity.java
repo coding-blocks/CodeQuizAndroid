@@ -51,6 +51,8 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
     private ArrayList<Boolean> optionsSelected;
 
     private boolean finishedOnce;
+    private ArrayList<String> quesArrJson;
+    private Integer challengeId;
 
 
     @Override
@@ -93,9 +95,8 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
 
 
     private void getQuestions() {
-        ArrayList<String> quesArrJson = getIntent().getStringArrayListExtra("questionArrayJson");
+        quesArrJson = getIntent().getStringArrayListExtra("questionArrayJson");
         questions = getQuestionsFromStrings(quesArrJson);
-
     }
 
     private ArrayList<Question> getQuestionsFromStrings(ArrayList<String> strings){
@@ -142,8 +143,7 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
                         finishedOnce = true;
                         endGame();
                     }
-                    /*TODO: Make API call. You have the following vars:
-                    numCorrect, timeForGame*/
+
 
                 } else {
                     loadNextQuestion();
@@ -166,6 +166,8 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
         intent.putExtra("timeForGame", timeForGame);
         intent.putExtra("optionsYouSelected", optionsYouSelected);
         intent.putExtra("correctsAndIncorrects", correctsAndIncorrects);
+        intent.putExtra("numCorrect", numCorrect);
+        intent.putExtra("challengeId", challengeId);
 
         clearLocalVars();
 
@@ -211,6 +213,7 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
         selectedTopic = intent.getStringExtra("selectedTopic");
         numOfQuestionsSelected = intent.getIntExtra("numOfQuestionsSelected", 0);
         usersChallenged = intent.getStringArrayListExtra("usersChallenged");
+        challengeId = intent.getIntExtra("challengeId", 0);
     }
 
 

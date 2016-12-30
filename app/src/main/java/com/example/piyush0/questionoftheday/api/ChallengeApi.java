@@ -30,6 +30,20 @@ public interface ChallengeApi {
     @GET("{id}")
     Call<ArrayList<Question>> getQuestions(@Path("id") int id);
 
+    @POST("submit/{id}")
+    Call<Boolean> submit(@Body Submission submission, @Path("id") int id);
+
+    class Submission{
+
+        Integer numCorrect;
+        Long timeTaken;
+
+        public Submission(Integer numCorrect, Long timeTaken) {
+
+            this.numCorrect = numCorrect;
+            this.timeTaken = timeTaken;
+        }
+    }
 
     class ChallengeCreator{
         ArrayList<Integer> users;
