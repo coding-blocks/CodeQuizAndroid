@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 public class DummyUsers {
 
-    //This is used by dummy challenge only.
 
     public static ArrayList<User> getUsers(){
         ArrayList<User> users = new ArrayList<>();

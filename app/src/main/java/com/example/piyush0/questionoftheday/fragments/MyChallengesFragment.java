@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,6 @@ import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
 import com.example.piyush0.questionoftheday.api.ChallengeApi;
-import com.example.piyush0.questionoftheday.dummy_utils.DummyChallenges;
-import com.example.piyush0.questionoftheday.models.Challenge;
 import com.example.piyush0.questionoftheday.models.ChallengeSmall;
 
 import java.util.ArrayList;

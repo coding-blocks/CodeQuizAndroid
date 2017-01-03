@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.piyush0.questionoftheday.R;
-import com.example.piyush0.questionoftheday.dummy_utils.DummyQuestion;
 import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.CheckAnswer;
 import com.example.piyush0.questionoftheday.utils.InitOptionsSelectedArray;

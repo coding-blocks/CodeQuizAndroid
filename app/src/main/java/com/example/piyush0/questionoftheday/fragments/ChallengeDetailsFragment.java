@@ -12,20 +12,15 @@ import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
 import com.example.piyush0.questionoftheday.api.ChallengeApi;
-import com.example.piyush0.questionoftheday.dummy_utils.DummyChallenges;
 import com.example.piyush0.questionoftheday.models.Challenge;
 import com.example.piyush0.questionoftheday.models.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.TableHeaderAdapter;
 import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.model.TableColumnModel;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
-import de.codecrafters.tableview.toolkit.SimpleTableDataAdapter;
-import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

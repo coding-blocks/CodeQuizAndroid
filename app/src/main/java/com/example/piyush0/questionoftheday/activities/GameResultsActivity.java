@@ -13,12 +13,11 @@ import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
 import com.example.piyush0.questionoftheday.api.ChallengeApi;
-import com.example.piyush0.questionoftheday.api.QuestionApi;
-import com.example.piyush0.questionoftheday.dummy_utils.DummyQuestion;
-import com.example.piyush0.questionoftheday.models.Challenge;
 import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.FontsOverride;
 import com.example.piyush0.questionoftheday.utils.TimeUtil;
+import com.google.gson.Gson;
+import com.mittsu.markedview.MarkedView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +33,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GameResultsActivity extends AppCompatActivity {
-
-    public static final String TAG = "GameResults";
+    public static final String TAG = "GameResultsAct";
 
     private TextView tv_time;
     private TableView tableView;
@@ -45,16 +43,17 @@ public class GameResultsActivity extends AppCompatActivity {
     private ArrayList<Question> questions;
     private ArrayList<Boolean> correctsAndIncorrects;
     private Integer numCorrect;
-    private Integer challengeId; //TODO: Get this
+    private Integer challengeId;
+    private ArrayList<String> quesArrJson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_results);
-
+        Log.d(TAG, "onCreate: ");
         FontsOverride.applyFontForToolbarTitle(this, FontsOverride.FONT_PROXIMA_NOVA, getWindow());
-        getQuestions();
         getIntentExtras();
+        getQuestions();
         initViews();
         submit();
     }
@@ -64,7 +63,7 @@ public class GameResultsActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
         ChallengeApi challengeApi = retrofit.create(ChallengeApi.class);
         ChallengeApi.Submission submission = new ChallengeApi.Submission(numCorrect, timeTaken);
-        
+
         challengeApi.submit(submission, challengeId).enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
@@ -79,7 +78,20 @@ public class GameResultsActivity extends AppCompatActivity {
     }
 
     private void getQuestions() {
-        questions = DummyQuestion.getDummyQuestions();
+        questions = getQuestionsFromStrings(quesArrJson);
+        Log.d(TAG, "getQuestions: " + questions.get(0).getOptions().get(1).getAnswer());
+    }
+
+    private ArrayList<Question> getQuestionsFromStrings(ArrayList<String> strings){
+        ArrayList<Question> retVal = new ArrayList<>();
+
+        Gson gson = new Gson();
+        for(int i = 0; i<strings.size(); i++) {
+            Question question = gson.fromJson(strings.get(i),Question.class);
+            retVal.add(question);
+        }
+
+        return retVal;
     }
 
     private void getIntentExtras() {
@@ -90,6 +102,7 @@ public class GameResultsActivity extends AppCompatActivity {
         correctsAndIncorrects = (ArrayList<Boolean>) intent.getSerializableExtra("correctsAndIncorrects");
         numCorrect = intent.getIntExtra("numCorrect", 0);
         challengeId = intent.getIntExtra("challengeId", 0);
+        quesArrJson = intent.getStringArrayListExtra("questionArrayJson");
     }
 
     private void initViews() {
@@ -135,6 +148,7 @@ public class GameResultsActivity extends AppCompatActivity {
 
             View convertView = null;
             Question question = questions.get(rowIndex);
+            Log.d(TAG, "getCellView: " + rowIndex);
             ArrayList<Integer> options = optionsSelected.get(rowIndex);
 
             switch (columnIndex) {
@@ -145,9 +159,9 @@ public class GameResultsActivity extends AppCompatActivity {
                     break;
 
                 case 1:
-                    convertView = li.inflate(R.layout.table_row_tv, null);
-                    TextView tv_question = (TextView) convertView;
-                    tv_question.setText(question.getQuestion());
+                    convertView = li.inflate(R.layout.tablet_row_mv, null);
+                    MarkedView tv_question = (MarkedView) convertView;
+                    tv_question.setMDText(question.getQuestion());
                     break;
 
                 case 2:

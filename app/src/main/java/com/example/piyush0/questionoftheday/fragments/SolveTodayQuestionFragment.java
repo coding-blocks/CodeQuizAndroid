@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +18,6 @@ import android.widget.TextView;
 import com.example.piyush0.questionoftheday.R;
 import com.example.piyush0.questionoftheday.services.TimeCountingService;
 import com.example.piyush0.questionoftheday.activities.MainActivity;
-import com.example.piyush0.questionoftheday.dummy_utils.DummyQuestion;
 import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.CheckAnswer;
 import com.example.piyush0.questionoftheday.utils.InitOptionsSelectedArray;
@@ -29,9 +26,7 @@ import com.example.piyush0.questionoftheday.utils.TimeUtil;
 
 import java.util.ArrayList;
 
-import cn.refactor.library.SmoothCheckBox;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,7 +101,6 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
 
     @Override
     public void onBooleanArrayPass(ArrayList<Boolean> optionsSelected) {
-
         this.optionsSelected = optionsSelected;
     }
 

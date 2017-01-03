@@ -12,17 +12,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.piyush0.questionoftheday.R;
-import com.example.piyush0.questionoftheday.dummy_utils.DummyChallenges;
-import com.example.piyush0.questionoftheday.dummy_utils.DummyQuestion;
 import com.example.piyush0.questionoftheday.fragments.SolveQuestionFragment;
-import com.example.piyush0.questionoftheday.models.Challenge;
 import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.CheckAnswer;
 import com.example.piyush0.questionoftheday.utils.FontsOverride;
 import com.example.piyush0.questionoftheday.utils.InitOptionsSelectedArray;
 import com.example.piyush0.questionoftheday.utils.TimeUtil;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
 
@@ -168,6 +164,7 @@ public class GameActivity extends AppCompatActivity implements SolveQuestionFrag
         intent.putExtra("correctsAndIncorrects", correctsAndIncorrects);
         intent.putExtra("numCorrect", numCorrect);
         intent.putExtra("challengeId", challengeId);
+        intent.putExtra("questionArrayJson", quesArrJson);
 
         clearLocalVars();
 

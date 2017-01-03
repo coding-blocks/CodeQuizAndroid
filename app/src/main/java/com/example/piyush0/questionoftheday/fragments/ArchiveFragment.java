@@ -190,7 +190,7 @@ public class ArchiveFragment extends Fragment {
                     fragmentManager.
                             beginTransaction().
                             replace(R.id.content_main,
-                                    SolveQuestionFragment.newInstance(questions.get(holder.getAdapterPosition()).getId(),null
+                                    SolveQuestionFragment.newInstance(null,questions.get(holder.getAdapterPosition())
                                     , true,
                                     "ArchiveFragment")).
                             commit();
