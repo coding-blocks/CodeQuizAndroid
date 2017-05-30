@@ -96,7 +96,7 @@ public class Refresh {
 
     }
 
-    private static Question download(Context context, final Boolean saveToDb) {
+    private static Question download(final Context context, final Boolean saveToDb) {
         String url = context.getResources().getString(R.string.localhost_url) + "questions/";
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
 
@@ -108,9 +108,15 @@ public class Refresh {
             public void onResponse(Call<Question> call, Response<Question> response) {
 
                 question[0] = response.body();
+
                 question[0].setToday(true);
-                if (saveToDb) {
-                    saveQuestionToLocalDb(question[0]);
+                if(response.body() == null) {
+                  Toast.makeText(context,"Data not fetched",Toast.LENGTH_LONG).show();
+                    Log.d("Solved this thing","NULL");
+                } else {
+                    if (saveToDb) {
+                        saveQuestionToLocalDb(question[0]);
+                    }
                 }
 
             }

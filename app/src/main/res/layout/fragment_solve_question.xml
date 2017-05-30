@@ -30,8 +30,4 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:background="@drawable/button_shape"/>
-
-
-
-
 </LinearLayout>
