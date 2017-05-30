@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.piyush0.questionoftheday.R;
 import com.example.piyush0.questionoftheday.services.TimeCountingService;
@@ -157,11 +158,17 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
         Log.d(TAG, "getTodaysQuestion: " + realm.where(Question.class).findAll());
         todaysQuestion = realm.where(Question.class).equalTo("isToday", true).findFirst();
 
-        getChildFragmentManager().
-                beginTransaction().
-                replace(R.id.fragment_solve_today_frag_container,
-                        SolveQuestionFragment.newInstance(todaysQuestion.getId(), null, false, "SolveTodayQuestionFragment")).
-                commit();
+        if(todaysQuestion == null) {
+            Toast.makeText(getActivity(),"Data not available from the server",Toast.LENGTH_LONG).show();
+            getFragmentManager().beginTransaction().
+                    replace(R.id.content_main,YouHaveANewQuesFragment.newInstance()).commit();
+        } else {
+            getChildFragmentManager().
+                    beginTransaction().
+                    replace(R.id.fragment_solve_today_frag_container,
+                            SolveQuestionFragment.newInstance(todaysQuestion.getId(), (Question) null, false, "SolveTodayQuestionFragment")).
+                    commit();
+        }
     }
 
     private void initSharedPrefsOnCreate() {
