@@ -9,4 +9,5 @@
 
     <string name="localhost_url">http://10.0.3.2:6969/api/v1/</string>
 
+    <string name="error_string">Unable to get data from the server</string>
 </resources>

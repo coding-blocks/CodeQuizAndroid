@@ -45,7 +45,7 @@ public class ArchiveFragment extends Fragment {
 
     private View outerView;
 
-    boolean b;
+    boolean nullCheck;
 
     public ArchiveFragment() {
         // Required empty public constructor
@@ -142,9 +142,9 @@ public class ArchiveFragment extends Fragment {
                 Log.d(TAG, "onResponse: " + response.body().get(0).getQuestion());
 
                 if(response.body() != null) {
-                    b = true;
+                    nullCheck = true;
                 } else {
-                    Toast.makeText(getActivity(),"Error fetching the data from the server",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),R.string.error_string,Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -154,7 +154,7 @@ public class ArchiveFragment extends Fragment {
             }
         });
 
-        if(b == true) {
+        if(nullCheck == true) {
             archiveAdapter.notifyDataSetChanged();
         }
     }
