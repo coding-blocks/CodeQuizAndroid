@@ -4,10 +4,13 @@ package com.example.piyush0.questionoftheday.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,22 +20,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.piyush0.questionoftheday.R;
+import com.example.piyush0.questionoftheday.models.Option;
 import com.example.piyush0.questionoftheday.services.TimeCountingService;
 import com.example.piyush0.questionoftheday.activities.MainActivity;
 import com.example.piyush0.questionoftheday.models.Question;
 import com.example.piyush0.questionoftheday.utils.CheckAnswer;
 import com.example.piyush0.questionoftheday.utils.InitOptionsSelectedArray;
 import com.example.piyush0.questionoftheday.utils.Refresh;
+import com.example.piyush0.questionoftheday.utils.SimpleDividerItemDecoration;
 import com.example.piyush0.questionoftheday.utils.TimeUtil;
+import com.mittsu.markedview.MarkedView;
 
 import java.util.ArrayList;
 
+import cn.refactor.library.SmoothCheckBox;
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SolveTodayQuestionFragment extends Fragment implements SolveQuestionFragment.OnBooleanArrayPass {
+public class SolveTodayQuestionFragment extends Fragment {
 
     public static final String SHARED_PREF_NAME = "TodaySolved";
     public static final String TAG = "SolveToday";
@@ -40,7 +48,9 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
     private Context context;
 
     private TextView tv_attemptsRemaining, tv_clock_seconds, tv_clock_minutes;
-    private Button btn_submit;
+    private MarkedView tv_quesStatement;
+    private RecyclerView optionsRecyclerView;
+    private Button btn_sumbit;
 
     private Handler handler; /*This is being used to calculate the time*/
 
@@ -53,7 +63,8 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
     private boolean isCorrectlySolved;
     private Long timeTaken;
     private int attempts;
-    private ArrayList<Boolean> optionsSelected;
+
+    private RealmList<Option> options;
 
 
     public SolveTodayQuestionFragment() {
@@ -69,7 +80,6 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        optionsSelected = InitOptionsSelectedArray.init(optionsSelected);
         getTodaysQuestion();
         initContext();
         View view = inflater.inflate(R.layout.fragment_solve_today_question, container, false);
@@ -81,7 +91,7 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
 
     private void setClickListenerOnBtn() {
 
-        btn_submit.setOnClickListener(new View.OnClickListener() {
+        btn_sumbit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -90,8 +100,8 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
                 editor.putInt("attempts", attempts);
 
                 tv_attemptsRemaining.setText(String.valueOf(3 - attempts));
-
-                isCorrectlySolved = CheckAnswer.isCorrect(optionsSelected, todaysQuestion);
+                Log.d(TAG, "onClick: " + getOptionsSelected());
+                isCorrectlySolved = CheckAnswer.isCorrect(getOptionsSelected(), todaysQuestion);
                 editor.putBoolean("isCorrect", isCorrectlySolved);
                 editor.commit();
 
@@ -100,11 +110,13 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
         });
     }
 
-    @Override
-    public void onBooleanArrayPass(ArrayList<Boolean> optionsSelected) {
-        this.optionsSelected = optionsSelected;
+    private ArrayList<Boolean> getOptionsSelected() {
+        ArrayList<Boolean> retVal = new ArrayList<>();
+        for (Option o : options) {
+            retVal.add(o.isSelected());
+        }
+        return retVal;
     }
-
 
     private void initContext() {
 
@@ -146,29 +158,79 @@ public class SolveTodayQuestionFragment extends Fragment implements SolveQuestio
         tv_clock_minutes = (TextView) view.findViewById(R.id.fragment_solve_today_question_minute);
         tv_clock_seconds = (TextView) view.findViewById(R.id.fragment_solve_today_question_second);
         tv_attemptsRemaining = (TextView) view.findViewById(R.id.fragment_solve_today_question_attempts);
-        btn_submit = (Button) view.findViewById(R.id.fragment_solve_today_btn_sumbit);
+        tv_quesStatement = (MarkedView) view.findViewById(R.id.fragment_question_tv_statement);
+        tv_quesStatement.setMDText(todaysQuestion.getQuestion());
+        optionsRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_question_options_list);
+        optionsRecyclerView.setAdapter(new OptionAdapter());
+        optionsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        optionsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        btn_sumbit = (Button) view.findViewById(R.id.fragment_question_btn_submit);
 
         initSharedPrefsOnCreate();
+    }
+
+    public class OptionViewHolder extends RecyclerView.ViewHolder {
+
+        SmoothCheckBox checkbox;
+        TextView textView;
+
+        OptionViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public class OptionAdapter extends RecyclerView.Adapter<OptionViewHolder> {
+
+        @Override
+        public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
 
+            LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View convertView = li.inflate(R.layout.list_item_options, parent, false);
+
+            OptionViewHolder optionViewHolder = new OptionViewHolder(convertView);
+            optionViewHolder.checkbox = (SmoothCheckBox) convertView.findViewById(R.id.list_item_option_checkbox);
+            optionViewHolder.textView = (TextView) convertView.findViewById(R.id.list_item_option_textView);
+
+            return optionViewHolder;
+        }
+
+
+        @Override
+        public void onBindViewHolder(final OptionViewHolder holder, final int position) {
+            holder.checkbox.setChecked(false);
+            holder.textView.setText(todaysQuestion.getOptions().get(position).getAnswer());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.checkbox.setChecked(!holder.checkbox.isChecked(), true);
+
+                    if (holder.checkbox.isChecked()) {
+//                        todaysQuestion.getOptions().get(holder.getAdapterPosition()).setSelected(true);
+                        options.get(holder.getAdapterPosition()).setSelected(true);
+                        Log.d(TAG, "onClick: " + todaysQuestion.getOptions().get(holder.getAdapterPosition()).isSelected());
+                    } else {
+//                        todaysQuestion.getOptions().get(holder.getAdapterPosition()).setSelected(false);
+                        options.get(holder.getAdapterPosition()).setSelected(false);
+                    }
+
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return todaysQuestion.getOptions().size();
+        }
     }
 
     private void getTodaysQuestion() {
         Realm realm = Realm.getDefaultInstance();
         Log.d(TAG, "getTodaysQuestion: " + realm.where(Question.class).findAll());
         todaysQuestion = realm.where(Question.class).equalTo("isToday", true).findFirst();
-
-        if(todaysQuestion == null) {
-            Toast.makeText(getActivity(),"Data not available from the server",Toast.LENGTH_LONG).show();
-            getFragmentManager().beginTransaction().
-                    replace(R.id.content_main,YouHaveANewQuesFragment.newInstance()).commit();
-        } else {
-            getChildFragmentManager().
-                    beginTransaction().
-                    replace(R.id.fragment_solve_today_frag_container,
-                            SolveQuestionFragment.newInstance(todaysQuestion.getId(), (Question) null, false, "SolveTodayQuestionFragment")).
-                    commit();
-        }
+        Log.d(TAG, "getTodaysQuestion: " + todaysQuestion);
+        options = realm.copyFromRealm(todaysQuestion).getOptions();
     }
 
     private void initSharedPrefsOnCreate() {

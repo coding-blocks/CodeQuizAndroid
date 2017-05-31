@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import com.example.piyush0.questionoftheday.fragments.SolveTodayQuestionFragment
 import com.example.piyush0.questionoftheday.fragments.TipFragment;
 import com.example.piyush0.questionoftheday.fragments.YouHaveANewQuesFragment;
 import com.example.piyush0.questionoftheday.models.Question;
+
+import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -42,12 +45,12 @@ public class Refresh {
             boolean isOpened = sharedPreferences.getBoolean("isOpened", false);
 
             if (isOpened) {
-                Log.d(TAG, "refresh: is Opened true" );
+                Log.d(TAG, "refresh: is Opened true");
                 int attempts = sharedPreferences.getInt("attempts", 0);
                 boolean isCorrect = sharedPreferences.getBoolean("isCorrect", false);
 
                 if (isCorrect) {
-                    Log.d(TAG, "refresh: is Correct true" );
+                    Log.d(TAG, "refresh: is Correct true");
                     fragmentManager.beginTransaction()
                             .replace(R.id.content_main,
                                     TipFragment.newInstance()).commit();
@@ -70,12 +73,11 @@ public class Refresh {
             }
 
         } else {
-            Log.d(TAG, "refresh: is Download false" );
+            Log.d(TAG, "refresh: is Download false");
             if (youHaveInternet(context)) {
                 clearSharedPref(sharedPreferences);
-                downloadAndSaveToDb(context);
-                sharedPreferences.edit().putBoolean("isDownloaded", true).commit();
-                refresh(sharedPreferences, fragmentManager, context);
+                downloadAndSaveToDb(context, fragmentManager, sharedPreferences,true);
+
             } else {
                 Toast.makeText(context, "Connect to the internet", Toast.LENGTH_SHORT).show();
             }
@@ -83,7 +85,7 @@ public class Refresh {
     }
 
     private static boolean youHaveTheSameQuestion(Context context) {
-        Question question = download(context, false);
+        Question question = downloadSync(context);
         if (question != null) {
             Realm realm = Realm.getDefaultInstance();
             Question dbQues = realm.where(Question.class).equalTo("isToday", true).findFirst();
@@ -96,7 +98,21 @@ public class Refresh {
 
     }
 
-    private static Question download(final Context context, final Boolean saveToDb) {
+    private static Question downloadSync(final Context context) {
+        String url = context.getResources().getString(R.string.localhost_url) + "questions/";
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
+        QuestionApi questionApi = retrofit.create(QuestionApi.class);
+        final Question[] question = new Question[1];
+        try {
+            Response<Question> response = questionApi.getTodaysQuestion().execute();
+            return response.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static void download(final Context context, final SharedPreferences sharedPreferences, final FragmentManager fragmentManager, final boolean refresh) {
         String url = context.getResources().getString(R.string.localhost_url) + "questions/";
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(url).build();
 
@@ -110,13 +126,21 @@ public class Refresh {
                 question[0] = response.body();
 
                 question[0].setToday(true);
-                if(response.body() == null) {
-                  Toast.makeText(context,"Data not fetched",Toast.LENGTH_LONG).show();
-                    Log.d("Solved this thing","NULL");
-                } else {
-                    if (saveToDb) {
-                        saveQuestionToLocalDb(question[0]);
-                    }
+//                if(response.body() == null) {
+//                  Toast.makeText(context,"Data not fetched",Toast.LENGTH_LONG).show();
+//                    Log.d("Solved this thing","NULL");
+//                } else {
+//                    if (saveToDb) {
+//                        saveQuestionToLocalDb(question[0]);
+//                    }
+//                }
+
+                if (refresh) {
+                    saveQuestionToLocalDb(question[0]);
+                    sharedPreferences.edit().putBoolean("isDownloaded", true).apply();
+                    refresh(sharedPreferences, fragmentManager, context);
+                }else{
+                    sharedPreferences.edit().putBoolean("isDownloaded", true).apply();
                 }
 
             }
@@ -128,11 +152,10 @@ public class Refresh {
             }
         });
 
-        return question[0];
     }
 
-    private static void downloadAndSaveToDb(Context context) {
-        download(context, true);
+    private static void downloadAndSaveToDb(Context context, FragmentManager fragmentManager, SharedPreferences sharedPreferences, Boolean refresh) {
+        download(context,sharedPreferences,fragmentManager,refresh);
     }
 
 
@@ -145,8 +168,8 @@ public class Refresh {
             q.setToday(false);
         }
 
-
         question.setToday(true);
+        Log.d(TAG, "saveQuestionToLocalDb: " + question);
         realm.copyToRealm(question);
         realm.commitTransaction();
 
@@ -160,7 +183,7 @@ public class Refresh {
         editor.putInt("attempts", 0);
         editor.putBoolean("isCorrect", false);
         editor.putBoolean("tipDownloaded", false);
-        editor.commit();
+        editor.apply();
     }
 
 
@@ -170,23 +193,22 @@ public class Refresh {
 
             if (youHaveInternet(context)) {
                 if (youHaveTheSameQuestion(context)) {
-                    sharedPreferences.edit().putBoolean("isDownloaded", true).commit();
+                    sharedPreferences.edit().putBoolean("isDownloaded", true).apply();
                 } else {
                     clearSharedPref(sharedPreferences);
-                    downloadAndSaveToDb(context);
-                    sharedPreferences.edit().putBoolean("isDownloaded", true).commit();
+                    downloadAndSaveToDb(context,null,sharedPreferences,false);
+
                 }
             } else {
-                sharedPreferences.edit().putBoolean("isDownloaded", true).commit();
+                sharedPreferences.edit().putBoolean("isDownloaded", true).apply();
             }
 
         } else {
             if (youHaveInternet(context)) {
                 clearSharedPref(sharedPreferences);
-                downloadAndSaveToDb(context);
-                sharedPreferences.edit().putBoolean("isDownloaded", true).commit();
+                downloadAndSaveToDb(context,null,sharedPreferences,false);
             } else {
-                sharedPreferences.edit().putBoolean("isDownloaded", false).commit();
+                sharedPreferences.edit().putBoolean("isDownloaded", false).apply();
             }
         }
 

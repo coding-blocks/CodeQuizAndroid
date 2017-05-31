@@ -16,29 +16,18 @@
             android:orientation="vertical">
 
 
-            <LinearLayout
-                android:id="@+id/fragment_solve_today_frag_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
+            <include layout="@layout/fragment_solve_question"/>
 
-            <Button
-                android:id="@+id/fragment_solve_today_btn_sumbit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/button_shape"
-                android:text="Submit"
-                android:textAppearance="@style/Widget.AppCompat.Button.Colored"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
-
-            <!--<fragment-->
-            <!--android:name="com.example.piyush0.questionoftheday.fragments.SolveQuestionFragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="10dp" />-->
-
+            <!--<Button-->
+                <!--android:id="@+id/fragment_solve_today_btn_sumbit"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="30dp"-->
+                <!--android:background="@drawable/button_shape"-->
+                <!--android:text="Submit"-->
+                <!--android:textAppearance="@style/Widget.AppCompat.Button.Colored"-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="20sp" />-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
