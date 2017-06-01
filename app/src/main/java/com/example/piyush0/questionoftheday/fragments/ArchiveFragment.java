@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.piyush0.questionoftheday.R;
 import com.example.piyush0.questionoftheday.api.QuestionApi;
@@ -43,6 +44,8 @@ public class ArchiveFragment extends Fragment {
     private Context context;
 
     private View outerView;
+
+    boolean nullCheck;
 
     public ArchiveFragment() {
         // Required empty public constructor
@@ -111,7 +114,11 @@ public class ArchiveFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<Question>> call, Response<ArrayList<Question>> response) {
                 questions = response.body();
-                initRecyclerView(outerView);
+                if(questions!=null) {
+                    initRecyclerView(outerView);
+                } else {
+                    Toast.makeText(getActivity(),"Error fetching the data from the server",Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -133,6 +140,12 @@ public class ArchiveFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<Question>> call, Response<ArrayList<Question>> response) {
                 Log.d(TAG, "onResponse: " + response.body().get(0).getQuestion());
+
+                if(response.body() != null) {
+                    nullCheck = true;
+                } else {
+                    Toast.makeText(getActivity(),R.string.error_string,Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -141,7 +154,9 @@ public class ArchiveFragment extends Fragment {
             }
         });
 
-        archiveAdapter.notifyDataSetChanged();
+        if(nullCheck == true) {
+            archiveAdapter.notifyDataSetChanged();
+        }
     }
 
 

@@ -9,4 +9,5 @@
 
     <string name="localhost_url">http://192.168.1.16:8080/api/v1/</string>
 
+    <string name="error_string">Unable to get data from the server</string>
 </resources>
